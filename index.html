@@ -4,226 +4,313 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>자율주행 환경에서의 Latency-Critical Network</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #0056b3;
-            --bg-color: #f4f7f6;
-            --text-color: #333;
-            --card-bg: #ffffff;
-        }
         body {
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            background-color: var(--bg-color);
-            margin: 0;
-            padding: 0;
+            font-family: 'Noto Sans KR', sans-serif;
+            scroll-behavior: smooth;
         }
-        header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 3rem 2rem;
-            text-align: center;
+        .section-card {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease-in-out;
         }
-        header h1 {
-            margin: 0;
-            font-size: 2.5rem;
+        .section-card:hover {
+            transform: translateY(-2px);
         }
-        header p {
-            margin-top: 1rem;
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-        .container {
-            display: flex;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-            gap: 2rem;
-        }
-        nav {
-            flex: 1;
-            position: sticky;
-            top: 2rem;
-            height: fit-content;
-            background: var(--card-bg);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-        nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        nav li {
-            margin-bottom: 0.8rem;
-        }
-        nav a {
-            text-decoration: none;
-            color: #555;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-        nav a:hover {
-            color: var(--primary-color);
-        }
-        main {
-            flex: 3;
-        }
-        section {
-            background: var(--card-bg);
-            padding: 2.5rem;
-            margin-bottom: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            scroll-margin-top: 2rem;
-        }
-        h2 {
-            color: var(--primary-color);
-            border-bottom: 2px solid #eee;
-            padding-bottom: 0.5rem;
-            margin-top: 0;
-        }
-        .highlight {
-            background-color: #e7f1ff;
-            padding: 0.2rem 0.4rem;
-            border-radius: 4px;
-            font-weight: bold;
-            color: #004085;
-        }
-        ul {
-            padding-left: 1.5rem;
-        }
-        li {
-            margin-bottom: 0.5rem;
-        }
-        footer {
-            text-align: center;
-            padding: 2rem;
-            background-color: #333;
-            color: white;
-            margin-top: 2rem;
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+        
+        .active-link {
+            background-color: #eff6ff;
+            color: #2563eb;
+            border-right: 4px solid #2563eb;
+            font-weight: 600;
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-800 flex h-screen overflow-hidden">
 
-<header>
-    <h1>자율주행 환경에서의 Latency-Critical Network</h1>
-    <p>지연 최소화 및 안정성 보장을 위한 통합 아키텍처 연구</p>
-</header>
-
-<div class="container">
-    <nav>
-        <h3>목차</h3>
-        <ul>
-            <li><a href="#sec1">1. 시작 (Introduction)</a></li>
-            <li><a href="#sec2">2. 문제 정의</a></li>
-            <li><a href="#sec3">3. 핵심 개념</a></li>
-            <li><a href="#sec4">4. 문제의 원인</a></li>
-            <li><a href="#sec5">5. 해결 방향 (통합 아키텍처)</a></li>
-            <li><a href="#sec6">6. Network Slicing</a></li>
-            <li><a href="#sec7">7. 시뮬레이션 설계</a></li>
-            <li><a href="#sec8">8. 기대 결과</a></li>
-            <li><a href="#sec9">9. 결론</a></li>
-        </ul>
-    </nav>
-
-    <main>
-        <section id="sec1">
-            <h2>1. 시작</h2>
-            <p>안녕하세요. 저희 팀은 자율주행 환경에서의 <strong>Latency-Critical Network</strong>, 즉 지연이 매우 중요한 네트워크에 대해 연구했습니다.</p>
-            <p>자율주행에서는 단순히 네트워크가 빠른 것이 아니라, <span class="highlight">정해진 시간 안에 반드시 데이터가 도착하는 것</span>이 매우 중요합니다. 예를 들어, 차량이 시속 100km로 주행 중일 때 몇 밀리초의 지연만 발생해도 제동 거리 차이가 발생하고, 이는 사고로 이어질 수 있습니다.</p>
-            <p>따라서 저희는 지연을 최소화하면서도 안정적으로 보장할 수 있는 네트워크 구조를 분석했습니다.</p>
-        </section>
-
-        <section id="sec2">
-            <h2>2. 문제 정의</h2>
-            <p>기존 네트워크는 기본적으로 best-effort 방식입니다. 즉, 데이터를 최대한 보내려고 노력은 하지만, 지연이나 손실을 보장하지는 않습니다. 이 구조에서는 다음과 같은 문제가 발생합니다:</p>
-            <ul>
-                <li>첫째, 트래픽이 많아지면 패킷이 서로 경쟁하면서 지연이 증가합니다.</li>
-                <li>둘째, 네트워크 상황에 따라 지연이 랜덤하게 변동합니다.</li>
-                <li>셋째, 패킷이 손실되면 재전송으로 인해 지연이 더 증가합니다.</li>
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 bg-white border-r border-gray-200 flex flex-col hidden md:flex z-10">
+        <div class="p-6 border-b border-gray-200">
+            <h1 class="text-xl font-bold text-blue-700 leading-tight">자율주행 LCN<br><span class="text-sm text-gray-500 font-normal">네트워크 연구 발표</span></h1>
+        </div>
+        <nav class="flex-1 overflow-y-auto py-4" id="nav-menu">
+            <ul class="space-y-1">
+                <li><a href="#sec1" class="nav-link block px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors">1. 시작 (Introduction)</a></li>
+                <li><a href="#sec2" class="nav-link block px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors">2. 문제 정의</a></li>
+                <li><a href="#sec3" class="nav-link block px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors">3. 핵심 개념</a></li>
+                <li><a href="#sec4" class="nav-link block px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors">4. 문제의 원인</a></li>
+                <li><a href="#sec5" class="nav-link block px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors">5. 해결 방향 (아키텍처)</a></li>
+                <li><a href="#sec6" class="nav-link block px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors">6. Network Slicing</a></li>
+                <li><a href="#sec7" class="nav-link block px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors">7. 시뮬레이션 설계</a></li>
+                <li><a href="#sec8" class="nav-link block px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors">8. 기대 결과</a></li>
+                <li><a href="#sec9" class="nav-link block px-6 py-3 text-gray-600 hover:bg-gray-50 transition-colors">9. 결론</a></li>
             </ul>
-            <p>이러한 특성은 일반 인터넷에서는 큰 문제가 아니지만, 자율주행에서는 매우 위험합니다. 브레이크 같은 크리티컬 메시지가 늦어질 수 있기 때문입니다.</p>
-        </section>
+        </nav>
+    </aside>
 
-        <section id="sec3">
-            <h2>3. 핵심 개념</h2>
-            <p>자율주행 네트워크에서는 모든 데이터가 동일하게 중요하지 않습니다. 크게 두 가지로 나눌 수 있습니다.</p>
-            <ul>
-                <li><strong>Critical Traffic:</strong> 브레이크 신호나 충돌 회피 메시지입니다. 이 데이터는 절대 지연되면 안 됩니다.</li>
-                <li><strong>Non-Critical Traffic:</strong> 영상 데이터나 지도 정보처럼 약간의 지연이 허용되는 데이터입니다.</li>
-            </ul>
-            <p>기존 네트워크에서는 이 두 가지가 같은 자원을 사용하기 때문에, 중요한 메시지도 경쟁에 밀릴 수 있습니다.</p>
-        </section>
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto scroll-smooth p-6 md:p-10 relative bg-gray-50 h-screen w-full" id="main-content">
+        <div class="max-w-4xl mx-auto space-y-12 pb-20">
 
-        <section id="sec4">
-            <h2>4. 문제의 원인</h2>
-            <p>이 문제는 특히 무선 네트워크에서 더 심각하게 나타납니다. 무선 환경은 다음과 같은 이유로 본질적으로 불안정합니다:</p>
-            <ul>
-                <li>첫째, <strong>간섭</strong>이 발생합니다. 주변 신호나 장애물로 인해 통신 품질이 떨어집니다.</li>
-                <li>둘째, <strong>거리와 채널 상태</strong>에 따라 전송 속도가 변합니다.</li>
-                <li>셋째, <strong>사용자</strong>가 많아지면 자원 경쟁이 발생합니다.</li>
-            </ul>
-            <p>이로 인해 무선 네트워크는 지연이 일정하지 않고, 예측하기 어렵습니다.</p>
-        </section>
+            <!-- Title Header -->
+            <header class="text-center pb-8 border-b border-gray-200">
+                <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium mb-4 inline-block">연구 발표 자료</span>
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">자율주행 환경에서의<br><span class="text-blue-600">Latency-Critical Network</span></h1>
+                <p class="text-xl text-gray-500">지연 최소화 및 안정성 보장을 위한 통합 아키텍처 연구</p>
+            </header>
 
-        <section id="sec5">
-            <h2>5. 해결 방향</h2>
-            <p>이 문제를 해결하기 위해 저희는 다음과 같은 통합 아키텍처를 제안했습니다.</p>
-            <ul>
-                <li><strong>1) TSN (차량 내부):</strong> 시간 기반으로 데이터를 전송하여 중요한 메시지가 항상 먼저 전송되도록 보장합니다. 즉, 충돌과 경쟁을 제거하여 지연을 일정하게 만듭니다.</li>
-                <li><strong>2) 5G URLLC (무선 구간):</strong> 무선 구간에서는 완전히 deterministic하게 만드는 것이 어렵기 때문에, URLLC를 통해 지연을 최소화하고 실패 확률을 극단적으로 낮춥니다. 주요 기술로는 <em>mini-slot(짧은 전송), grant-free(즉시 전송), redundancy(중복 전송)</em>가 있습니다.</li>
-                <li><strong>3) MEC (엣지 컴퓨팅):</strong> 데이터를 멀리 있는 클라우드가 아니라 가까운 위치에서 처리하여 왕복 시간을 줄입니다.</li>
-                <li><strong>4) DetNet (광역 네트워크):</strong> 여러 네트워크 구간에서도 지연을 일정하게 유지하도록 도와줍니다.</li>
-            </ul>
-        </section>
+            <!-- 1. 시작 -->
+            <section id="sec1" class="section-card bg-white p-8 rounded-2xl scroll-mt-10">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4 flex items-center"><span class="bg-blue-100 text-blue-800 w-8 h-8 rounded-full inline-flex items-center justify-center mr-3 text-sm">1</span>시작</h2>
+                <div class="text-lg leading-relaxed text-gray-700 space-y-4">
+                    <p>안녕하세요. 저희 팀은 자율주행 환경에서의 <strong>Latency-Critical Network</strong>, 즉 지연이 매우 중요한 네트워크에 대해 연구했습니다.</p>
+                    <p>자율주행에서는 단순히 네트워크가 빠른 것이 아니라, <span class="bg-yellow-100 px-2 py-1 rounded font-bold text-yellow-800">정해진 시간 안에 반드시 데이터가 도착하는 것</span>이 매우 중요합니다.</p>
+                    <p class="border-l-4 border-gray-300 pl-4 italic text-gray-600">"예를 들어, 차량이 시속 100km로 주행 중일 때 몇 밀리초의 지연만 발생해도 제동 거리 차이가 발생하고, 이는 사고로 이어질 수 있습니다."</p>
+                    <p>따라서 저희는 지연을 최소화하면서도 안정적으로 보장할 수 있는 네트워크 구조를 분석했습니다.</p>
+                </div>
+            </section>
 
-        <section id="sec6">
-            <h2>6. Network Slicing</h2>
-            <p>또한 저희는 <span class="highlight">Network Slicing</span>을 적용했습니다. 이는 하나의 네트워크를 여러 개로 나누어 각각 다른 목적을 가지게 하는 기술입니다. 예를 들어:</p>
-            <ul>
-                <li><strong>안전 관련 메시지 (브레이크):</strong> 전용 slice</li>
-                <li><strong>상태 정보:</strong> 별도 slice</li>
-                <li><strong>영상 데이터:</strong> best-effort slice</li>
-            </ul>
-            <p>이렇게 분리하면, 중요한 메시지가 다른 데이터에 의해 방해받지 않게 됩니다.</p>
-        </section>
+            <!-- 2. 문제 정의 -->
+            <section id="sec2" class="section-card bg-white p-8 rounded-2xl scroll-mt-10">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4 flex items-center"><span class="bg-blue-100 text-blue-800 w-8 h-8 rounded-full inline-flex items-center justify-center mr-3 text-sm">2</span>문제 정의</h2>
+                <div class="text-lg leading-relaxed text-gray-700 space-y-4">
+                    <p>기존 네트워크는 기본적으로 <strong>Best-Effort 방식</strong>입니다. 데이터를 최대한 보내려고 노력은 하지만, 지연이나 손실을 보장하지는 않습니다.</p>
+                    <div class="bg-red-50 border border-red-100 rounded-xl p-5 my-4">
+                        <h4 class="font-bold text-red-700 mb-3">기존 구조의 3가지 문제점</h4>
+                        <ul class="space-y-3">
+                            <li class="flex items-start"><span class="mr-2">🚨</span><span>트래픽이 많아지면 패킷이 서로 <strong>경쟁</strong>하면서 지연이 증가합니다.</span></li>
+                            <li class="flex items-start"><span class="mr-2">🎲</span><span>네트워크 상황에 따라 지연이 <strong>랜덤하게 변동</strong>합니다.</span></li>
+                            <li class="flex items-start"><span class="mr-2">🔄</span><span>패킷이 손실되면 <strong>재전송</strong>으로 인해 지연이 더 증가합니다.</span></li>
+                        </ul>
+                    </div>
+                    <p>이러한 특성은 일반 인터넷에서는 큰 문제가 아니지만, 자율주행에서는 브레이크 같은 크리티컬 메시지가 늦어질 수 있어 매우 위험합니다.</p>
+                </div>
+            </section>
 
-        <section id="sec7">
-            <h2>7. 시뮬레이션 설계</h2>
-            <p>저희는 이러한 구조를 검증하기 위해 다음과 같은 시나리오를 설정했습니다.</p>
-            <ul>
-                <li>차량 5대가 platooning 형태로 주행</li>
-                <li>평소에는 상태 메시지 전송, 동시에 일반 트래픽 존재</li>
-                <li>선두 차량이 급제동</li>
-            </ul>
-            <p>이 상황에서 두 가지 경우를 비교합니다:</p>
-            <ul>
-                <li><strong>Case A (기존 네트워크):</strong> 모든 트래픽 동일 처리, 경쟁 발생</li>
-                <li><strong>Case B (개선된 네트워크 - LCN):</strong> 크리티컬 메시지 우선 처리, QoS 및 slicing 적용</li>
-            </ul>
-        </section>
+            <!-- 3. 핵심 개념 -->
+            <section id="sec3" class="section-card bg-white p-8 rounded-2xl scroll-mt-10">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4 flex items-center"><span class="bg-blue-100 text-blue-800 w-8 h-8 rounded-full inline-flex items-center justify-center mr-3 text-sm">3</span>핵심 개념</h2>
+                <p class="text-lg mb-6 text-gray-700">자율주행 네트워크에서는 모든 데이터가 동일하게 중요하지 않습니다. 크게 두 가지로 나눌 수 있습니다.</p>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-6 rounded-xl border border-red-200">
+                        <h3 class="text-xl font-bold text-red-700 mb-2">Critical Traffic</h3>
+                        <p class="text-red-900 mb-2 text-sm font-medium">예: 브레이크 신호, 충돌 회피 메시지</p>
+                        <p class="text-gray-700">안전과 직결된 데이터로, <strong>절대 지연되면 안 됩니다.</strong></p>
+                    </div>
+                    <div class="bg-green-50 p-6 rounded-xl border border-green-200">
+                        <h3 class="text-xl font-bold text-green-700 mb-2">Non-Critical Traffic</h3>
+                        <p class="text-green-900 mb-2 text-sm font-medium">예: 영상 데이터, 지도 정보</p>
+                        <p class="text-gray-700">서비스 품질을 위한 데이터로, <strong>약간의 지연이 허용</strong>됩니다.</p>
+                    </div>
+                </div>
+                <p class="mt-6 text-gray-700 font-medium">기존 네트워크에서는 이 두 가지가 같은 자원을 사용하기 때문에, 중요한 메시지도 경쟁에 밀릴 수 있습니다.</p>
+            </section>
 
-        <section id="sec8">
-            <h2>8. 기대 결과</h2>
-            <p><strong>기존 네트워크</strong>에서는 지연이 불안정하고 브레이크 메시지가 늦어질 수 있으며, deadline miss가 발생할 수 있습니다.</p>
-            <p>반면, <strong>LCN을 적용</strong>하면 latency가 안정적으로 유지되고, jitter가 감소하며, 크리티컬 메시지가 항상 제시간에 도착할 것으로 기대됩니다.</p>
-        </section>
+            <!-- 4. 문제의 원인 -->
+            <section id="sec4" class="section-card bg-white p-8 rounded-2xl scroll-mt-10">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4 flex items-center"><span class="bg-blue-100 text-blue-800 w-8 h-8 rounded-full inline-flex items-center justify-center mr-3 text-sm">4</span>문제의 원인</h2>
+                <p class="text-lg text-gray-700 mb-4">이 문제는 특히 <strong>무선 네트워크</strong>에서 더 심각하게 나타납니다. 무선 환경은 다음과 같은 이유로 본질적으로 불안정합니다.</p>
+                
+                <div class="flex flex-col space-y-4 mt-6">
+                    <div class="flex items-center p-4 bg-gray-50 rounded-lg border border-gray-100">
+                        <div class="text-3xl mr-4">📡</div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">간섭 (Interference)</h4>
+                            <p class="text-gray-600">주변 신호나 장애물로 인해 통신 품질이 떨어집니다.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center p-4 bg-gray-50 rounded-lg border border-gray-100">
+                        <div class="text-3xl mr-4">🛣️</div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">거리와 채널 상태 (Channel State)</h4>
+                            <p class="text-gray-600">차량의 이동에 따라 전송 속도가 수시로 변합니다.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center p-4 bg-gray-50 rounded-lg border border-gray-100">
+                        <div class="text-3xl mr-4">👥</div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">사용자 밀집 (Congestion)</h4>
+                            <p class="text-gray-600">접속자가 많아지면 한정된 주파수 자원 경쟁이 발생합니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-        <section id="sec9">
-            <h2>9. 결론</h2>
-            <p>결론적으로, 자율주행 환경에서는 단순히 빠른 네트워크가 아니라, <span class="highlight">지연이 보장되는 네트워크</span>가 필요합니다.</p>
-            <p>저희는 이를 위해 <strong>TSN, 5G URLLC, MEC, DetNet</strong>을 결합한 구조를 제안하였으며, 특히 크리티컬 메시지의 지연 보장이 핵심임을 확인했습니다.</p>
-        </section>
+            <!-- 5. 해결 방향 -->
+            <section id="sec5" class="section-card bg-white p-8 rounded-2xl scroll-mt-10">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4 flex items-center"><span class="bg-blue-100 text-blue-800 w-8 h-8 rounded-full inline-flex items-center justify-center mr-3 text-sm">5</span>해결 방향 (통합 아키텍처)</h2>
+                <p class="text-lg text-gray-700 mb-6">이 문제를 해결하기 위해 저희는 4가지 핵심 기술을 결합한 통합 아키텍처를 제안했습니다.</p>
+                
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="border border-blue-200 p-5 rounded-xl hover:bg-blue-50 transition-colors">
+                        <div class="text-blue-600 font-bold mb-1 flex items-center justify-between">
+                            <span>1) TSN</span>
+                            <span class="text-xs bg-blue-100 px-2 py-1 rounded">차량 내부</span>
+                        </div>
+                        <p class="text-sm text-gray-700 mt-2">시간 기반으로 데이터를 전송하여 중요한 메시지가 항상 먼저 전송되도록 보장합니다. 충돌과 경쟁을 제거하여 지연을 일정하게 만듭니다.</p>
+                    </div>
+                    
+                    <div class="border border-indigo-200 p-5 rounded-xl hover:bg-indigo-50 transition-colors">
+                        <div class="text-indigo-600 font-bold mb-1 flex items-center justify-between">
+                            <span>2) 5G URLLC</span>
+                            <span class="text-xs bg-indigo-100 px-2 py-1 rounded">무선 구간</span>
+                        </div>
+                        <p class="text-sm text-gray-700 mt-2">무선 구간의 지연을 최소화하고 실패 확률을 낮춥니다.</p>
+                        <div class="mt-2 text-xs flex gap-1 flex-wrap">
+                            <span class="bg-white border px-1 rounded">mini-slot(짧은 전송)</span>
+                            <span class="bg-white border px-1 rounded">grant-free(즉시 전송)</span>
+                            <span class="bg-white border px-1 rounded">redundancy(중복)</span>
+                        </div>
+                    </div>
+
+                    <div class="border border-purple-200 p-5 rounded-xl hover:bg-purple-50 transition-colors">
+                        <div class="text-purple-600 font-bold mb-1 flex items-center justify-between">
+                            <span>3) MEC</span>
+                            <span class="text-xs bg-purple-100 px-2 py-1 rounded">엣지 컴퓨팅</span>
+                        </div>
+                        <p class="text-sm text-gray-700 mt-2">데이터를 멀리 있는 클라우드가 아니라 가까운 기지국/엣지에서 처리하여 물리적인 왕복 시간(RTT)을 줄입니다.</p>
+                    </div>
+
+                    <div class="border border-teal-200 p-5 rounded-xl hover:bg-teal-50 transition-colors">
+                        <div class="text-teal-600 font-bold mb-1 flex items-center justify-between">
+                            <span>4) DetNet</span>
+                            <span class="text-xs bg-teal-100 px-2 py-1 rounded">광역 네트워크</span>
+                        </div>
+                        <p class="text-sm text-gray-700 mt-2">차량, 엣지, 클라우드를 잇는 여러 네트워크 구간(라우터/스위치)에서도 지연을 일정하게 유지하도록 도와줍니다.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. Network Slicing -->
+            <section id="sec6" class="section-card bg-white p-8 rounded-2xl scroll-mt-10">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4 flex items-center"><span class="bg-blue-100 text-blue-800 w-8 h-8 rounded-full inline-flex items-center justify-center mr-3 text-sm">6</span>Network Slicing</h2>
+                <div class="text-lg leading-relaxed text-gray-700 mb-6">
+                    <p>또한 저희는 <strong>Network Slicing</strong>을 적용했습니다. 이는 물리적인 하나의 네트워크를 논리적으로 여러 개로 나누어 각각 다른 목적을 가지게 하는 기술입니다.</p>
+                </div>
+                
+                <div class="bg-gray-800 rounded-xl p-6 text-white">
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <div class="w-1/3 font-bold text-red-400">전용 Slice (URLLC)</div>
+                            <div class="w-2/3 bg-gray-700 h-10 rounded overflow-hidden flex relative">
+                                <div class="bg-red-500 w-full h-full flex items-center px-4 font-bold text-sm">안전 관련 메시지 (브레이크)</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-1/3 font-bold text-yellow-400">별도 Slice (mMTC)</div>
+                            <div class="w-2/3 bg-gray-700 h-10 rounded overflow-hidden flex relative">
+                                <div class="bg-yellow-500 w-3/4 h-full flex items-center px-4 text-sm text-black">상태 정보</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-1/3 font-bold text-blue-400">Best-Effort Slice (eMBB)</div>
+                            <div class="w-2/3 bg-gray-700 h-10 rounded overflow-hidden flex relative">
+                                <div class="bg-blue-500 w-full h-full flex items-center px-4 text-sm">영상 데이터, 인포테인먼트</div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-sm text-gray-300 text-center">이렇게 분리하면, 대용량 영상 데이터 트래픽이 몰려도 브레이크 신호는 방해받지 않습니다.</p>
+                </div>
+            </section>
+
+            <!-- 7. 시뮬레이션 설계 -->
+            <section id="sec7" class="section-card bg-white p-8 rounded-2xl scroll-mt-10">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4 flex items-center"><span class="bg-blue-100 text-blue-800 w-8 h-8 rounded-full inline-flex items-center justify-center mr-3 text-sm">7</span>시뮬레이션 설계</h2>
+                <p class="text-lg text-gray-700 mb-4">저희는 이 구조를 검증하기 위해 다음과 같은 시나리오를 설정했습니다.</p>
+                
+                <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mb-6 font-medium text-blue-900">
+                    <ul class="list-disc list-inside">
+                        <li>차량 5대가 <strong>Platooning(군집 주행)</strong> 형태로 주행</li>
+                        <li>평소에는 상태 메시지 전송 및 일반 트래픽 동시 존재</li>
+                        <li><strong>선두 차량이 급제동 발생!</strong> (크리티컬 메시지 발생)</li>
+                    </ul>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="flex-1 bg-white border-2 border-gray-200 p-4 rounded-lg">
+                        <h4 class="font-bold text-gray-800 text-center mb-2">Case A. 기존 네트워크</h4>
+                        <p class="text-sm text-gray-600 text-center">모든 트래픽 동일 처리, 경쟁 발생</p>
+                    </div>
+                    <div class="flex items-center justify-center text-gray-400 font-bold text-xl">VS</div>
+                    <div class="flex-1 bg-blue-600 text-white p-4 rounded-lg shadow-md">
+                        <h4 class="font-bold text-center mb-2">Case B. 개선된 네트워크 (LCN)</h4>
+                        <p class="text-sm text-blue-100 text-center">크리티컬 메시지 우선 처리, QoS 및 Slicing 적용</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. 기대 결과 -->
+            <section id="sec8" class="section-card bg-white p-8 rounded-2xl scroll-mt-10">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4 flex items-center"><span class="bg-blue-100 text-blue-800 w-8 h-8 rounded-full inline-flex items-center justify-center mr-3 text-sm">8</span>기대 결과</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="border border-red-200 rounded-xl p-5">
+                        <h3 class="text-red-600 font-bold text-lg mb-3 border-b pb-2">기존 네트워크</h3>
+                        <ul class="space-y-2 text-gray-700">
+                            <li class="flex items-center"><span class="text-red-500 mr-2">❌</span>지연(Latency) 불안정</li>
+                            <li class="flex items-center"><span class="text-red-500 mr-2">❌</span>브레이크 메시지 전송 지연</li>
+                            <li class="flex items-center font-bold text-red-700"><span class="text-red-500 mr-2">⚠️</span>Deadline Miss 발생 (충돌 위험)</li>
+                        </ul>
+                    </div>
+                    <div class="border border-blue-200 rounded-xl p-5 bg-blue-50">
+                        <h3 class="text-blue-700 font-bold text-lg mb-3 border-b pb-2 border-blue-200">LCN 적용 후</h3>
+                        <ul class="space-y-2 text-gray-800">
+                            <li class="flex items-center"><span class="text-blue-500 mr-2">✅</span>Latency 안정적 유지</li>
+                            <li class="flex items-center"><span class="text-blue-500 mr-2">✅</span>Jitter(지연 변동성) 감소</li>
+                            <li class="flex items-center font-bold text-blue-700"><span class="text-blue-500 mr-2">🎯</span>크리티컬 메시지 100% 제시간 도착</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 9. 결론 -->
+            <section id="sec9" class="section-card bg-gray-800 text-white p-8 rounded-2xl scroll-mt-10">
+                <h2 class="text-2xl font-bold text-blue-300 mb-4 flex items-center"><span class="bg-blue-900 text-blue-200 w-8 h-8 rounded-full inline-flex items-center justify-center mr-3 text-sm">9</span>결론</h2>
+                <div class="text-lg leading-relaxed space-y-4">
+                    <p>결론적으로, 자율주행 환경에서는 단순히 빠른 네트워크가 아니라, <strong class="text-yellow-400">지연이 보장되는 네트워크</strong>가 필수적입니다.</p>
+                    <p>저희는 이를 위해 <strong>[ TSN + 5G URLLC + MEC + DetNet ]</strong>을 결합한 통합 구조를 제안하였으며, 네트워크 슬라이싱을 통해 <strong>크리티컬 메시지의 지연 보장이 가능함</strong>을 확인했습니다.</p>
+                    <p class="text-center mt-8 text-gray-400 text-sm">감사합니다.</p>
+                </div>
+            </section>
+        </div>
     </main>
-</div>
 
-<footer>
-    <p>Computer Networks Project Report | 고려대학교 세종캠퍼스 2020271319 전남규</p>
-</footer>
+    <script>
+        // ScrollSpy logic to highlight active menu item
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
 
+            const observerOptions = {
+                root: document.querySelector('#main-content'),
+                rootMargin: '0px',
+                threshold: 0.5
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        navLinks.forEach(link => {
+                            link.classList.remove('active-link');
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.classList.add('active-link');
+                                // Scroll the sidebar to keep active item in view if needed
+                                link.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => observer.observe(section));
+        });
+    </script>
 </body>
 </html>
